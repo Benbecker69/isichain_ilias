@@ -46,4 +46,26 @@ describe("Blockchain", () => {
     blockchain.replaceChain(blockchain2.chain);
     expect(blockchain.chain).not.toEqual(blockchain2.chain);
   });
+
+  // 🔁 Tests liés au PoW
+  it('generates a hash that matches the difficulty', () => {
+    const lastBlock = Block.genesis();
+    const data = 'test';
+    const minedBlock = Block.mineBlock(lastBlock, data);
+
+    expect(minedBlock.hash.substring(0, minedBlock.difficulty))
+      .toEqual('0'.repeat(minedBlock.difficulty));
+  });
+
+  it('lowers difficulty for a slower block', () => {
+    const block = Block.mineBlock(Block.genesis(), 'slow');
+    expect(Block.adjustDifficulty(block, block.timestamp + 4000))
+      .toEqual(block.difficulty - 1);
+  });
+
+  it('raises difficulty for a fast block', () => {
+    const block = Block.mineBlock(Block.genesis(), 'fast');
+    expect(Block.adjustDifficulty(block, block.timestamp + 1))
+      .toEqual(block.difficulty + 1);
+  });
 });
