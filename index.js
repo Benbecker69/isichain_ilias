@@ -1,4 +1,5 @@
 const Block = require('./block');
 
-const genesisBlock = Block.genesis();
-console.log(genesisBlock.toString());
+const block = new Block(Date.now(), 'foo-lastHash', 'bar-hash', 'some data');
+console.log(block.toString());
+console.log('Block Hash:', Block.blockHash(block));
